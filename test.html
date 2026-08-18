@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Jarvis — Test page</title>
+  <meta name="theme-color" content="#0f6e6a" />
+  <style>
+    :root {
+      --bg0: #e8eef4; --bg1: #f7f9fb; --ink: #14202b; --muted: #5a6b7a;
+      --line: #c9d5e0; --accent: #0f6e6a; --ok: #1b7a4e; --bad: #8a3030;
+      --card: #ffffffee; --font: "Segoe UI", "Helvetica Neue", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100dvh; color: var(--ink); font-family: var(--font);
+      background: radial-gradient(800px 420px at 8% -8%, #d7ebe8, transparent 55%),
+        linear-gradient(160deg, var(--bg0), var(--bg1));
+    }
+    .wrap { max-width: 760px; margin: 0 auto; padding: 1rem 0.85rem 2rem; }
+    h1 { margin: 0 0 0.25rem; font-size: 1.35rem; }
+    .sub { color: var(--muted); margin: 0 0 1rem; font-size: 0.9rem; line-height: 1.45; }
+    .banner {
+      background: #e7f3f2; border: 1px solid #b9d9d6; border-radius: 10px;
+      padding: 0.65rem 0.8rem; font-size: 0.82rem; line-height: 1.4; margin-bottom: 0.9rem;
+    }
+    .row { display: flex; flex-wrap: wrap; gap: 0.45rem; margin: 0.55rem 0; }
+    .btn, .chip {
+      border: 1px solid var(--line); background: #fff; border-radius: 11px;
+      padding: 0.5rem 0.8rem; font: inherit; font-weight: 650; cursor: pointer; color: inherit;
+    }
+    .btn.primary { background: var(--accent); color: #fff; border-color: transparent; }
+    .chip { border-radius: 999px; font-size: 0.8rem; padding: 0.35rem 0.7rem; }
+    .card {
+      background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+      padding: 0.9rem 1rem; margin: 0.75rem 0; box-shadow: 0 8px 24px rgba(20,32,43,.06);
+    }
+    .card h2 { margin: 0 0 0.45rem; font-size: 1rem; }
+    .status { font-size: 0.8rem; font-weight: 700; }
+    .status.ok { color: var(--ok); }
+    .status.bad { color: var(--bad); }
+    .log {
+      background: #0f1a22; color: #d7e6ef; border-radius: 12px; padding: 0.75rem;
+      min-height: 180px; max-height: 42vh; overflow: auto; font: 0.78rem/1.45 ui-monospace, Consolas, monospace;
+      white-space: pre-wrap;
+    }
+    input, textarea, select {
+      width: 100%; border: 1px solid var(--line); border-radius: 10px; padding: 0.55rem 0.7rem;
+      font: inherit; font-size: 16px; margin-top: 0.35rem;
+    }
+    label { font-size: 0.8rem; color: var(--muted); font-weight: 650; display: block; margin-top: 0.55rem; }
+    a { color: var(--accent); font-weight: 650; }
+    .grid { display: grid; gap: 0.55rem; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Jarvis test page</h1>
+    <p class="sub">Quick checks for brain health, skills, organize, theme, and connections. Works against a live brain or in demo mode.</p>
+    <p class="banner" id="mode-banner">Checking brain…</p>
+
+    <div class="card">
+      <h2>1 · Brain</h2>
+      <p class="status" id="health">…</p>
+      <div class="row">
+        <button class="btn primary" type="button" id="btn-health">Ping /health</button>
+        <a class="btn" href="/app/">Open full desktop UI</a>
+        <a class="btn" href="/app/mobile-preview.html">Mobile preview</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>2 · Chat smoke tests</h2>
+      <div class="row" id="quick">
+        <button class="chip" data-q="/ping">/ping</button>
+        <button class="chip" data-q="/skills">/skills</button>
+        <button class="chip" data-q="/organize pictures faces landscapes cars screenshots">/organize pictures</button>
+        <button class="chip" data-q="/organize files by size">/organize files by size</button>
+        <button class="chip" data-q="/appearance">/appearance</button>
+        <button class="chip" data-q="set accent to #0f6e6a">set accent</button>
+        <button class="chip" data-q="/connections">/connections</button>
+        <button class="chip" data-q="/fusion print">/fusion print</button>
+        <button class="chip" data-q="/experimental">/experimental</button>
+        <button class="chip" data-q="/skills create I want a feeds and speeds calculator from tool size material and SFM">create feeds skill</button>
+      </div>
+      <label for="custom">Custom message</label>
+      <textarea id="custom" rows="2" placeholder="Type a command…"></textarea>
+      <div class="row">
+        <button class="btn primary" type="button" id="btn-send">Send</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>3 · API checks</h2>
+      <div class="grid">
+        <button class="btn" type="button" data-api="/skills/catalog">Skills catalog</button>
+        <button class="btn" type="button" data-api="/connections/scan">Connections scan</button>
+        <button class="btn" type="button" data-api="/experimental/catalog">Experimental</button>
+        <button class="btn" type="button" data-api="/theme">Theme</button>
+        <button class="btn" type="button" data-api-post="/organize/plan" data-body='{"domain":"pictures","scheme":"album","categories":["faces","cars"]}'>Organize plan</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Log</h2>
+      <div class="log" id="log"></div>
+      <div class="row"><button class="btn" type="button" id="btn-clear">Clear log</button></div>
+    </div>
+  </div>
+  <script>
+    const logEl = document.getElementById("log");
+    const healthEl = document.getElementById("health");
+    const banner = document.getElementById("mode-banner");
+    let live = false;
+
+    function log(msg) {
+      logEl.textContent += msg + "\n\n";
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    async function ping() {
+      try {
+        const res = await fetch("/health");
+        const data = await res.json();
+        live = res.ok;
+        healthEl.textContent = live ? ("Connected · v" + (data.version || "?")) : "Unreachable";
+        healthEl.className = "status " + (live ? "ok" : "bad");
+        banner.textContent = live
+          ? "Live brain detected — buttons hit real /chat and APIs."
+          : "Demo mode — brain offline; chat replies are local stubs.";
+      } catch (e) {
+        live = false;
+        healthEl.textContent = "Offline · " + e;
+        healthEl.className = "status bad";
+        banner.textContent = "Demo mode — open this page through the Jarvis server for live tests.";
+      }
+    }
+
+    const demo = {
+      "/ping": "Online (demo).",
+      "/skills": "Skills catalog (demo): inbox, organize, fusion, appearance, create/revert…",
+      "/appearance": "Appearance (demo): bg/accent/text · nav left|top · appearance reset",
+      "/connections": "Connections (demo): email, calendar, HA, speakers, vaults, auto-download…",
+      "/experimental": "Experimental (demo): x_redline, x_dataroom, …",
+      "/fusion print": "ASME print builder (demo) — title block + tol dial + manual finish pauses.",
+    };
+
+    async function sendChat(text) {
+      const t = (text || "").trim();
+      if (!t) return;
+      log("YOU> " + t);
+      if (!live) {
+        const key = Object.keys(demo).find((k) => t.toLowerCase().startsWith(k));
+        log("JARVIS> " + (demo[key] || "Demo stub. Start Jarvis (`python -m jarvis`) and reload for live replies."));
+        return;
+      }
+      try {
+        const res = await fetch("/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: t, channel: "test-page" }),
+        });
+        const data = await res.json();
+        log("JARVIS> " + (data.reply || JSON.stringify(data)));
+      } catch (e) {
+        log("ERR> " + e);
+      }
+    }
+
+    async function hitApi(path, body) {
+      log("API> " + (body ? "POST " : "GET ") + path);
+      try {
+        const res = await fetch(path, body ? {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body,
+        } : undefined);
+        const data = await res.json();
+        const summary = data.count != null
+          ? ("count=" + data.count + " · " + JSON.stringify(data).slice(0, 400))
+          : JSON.stringify(data).slice(0, 600);
+        log("OK " + res.status + "> " + summary);
+      } catch (e) {
+        log("ERR> " + e);
+      }
+    }
+
+    document.getElementById("btn-health").onclick = ping;
+    document.getElementById("btn-send").onclick = () => sendChat(document.getElementById("custom").value);
+    document.getElementById("btn-clear").onclick = () => { logEl.textContent = ""; };
+    document.querySelectorAll("#quick .chip").forEach((b) => b.onclick = () => sendChat(b.getAttribute("data-q")));
+    document.querySelectorAll("[data-api]").forEach((b) => b.onclick = () => hitApi(b.getAttribute("data-api")));
+    document.querySelectorAll("[data-api-post]").forEach((b) => {
+      b.onclick = () => hitApi(b.getAttribute("data-api-post"), b.getAttribute("data-body"));
+    });
+
+    ping();
+    log("Test page ready.");
+  </script>
+</body>
+</html>
