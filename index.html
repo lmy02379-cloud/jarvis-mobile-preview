@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Jarvis — mobile preview of desktop UI</title>
+  <meta name="description" content="Phone-friendly preview of the Jarvis desktop companion." />
+  <meta property="og:title" content="Jarvis desktop UI — mobile preview" />
+  <meta property="og:description" content="Swipe the tabs to explore Chat, Connections, Skills, Fusion, Experimental." />
+  <meta name="theme-color" content="#0f6e6a" />
+  <style>
+    :root {
+      --bg0: #e8eef4;
+      --bg1: #f7f9fb;
+      --ink: #14202b;
+      --muted: #5a6b7a;
+      --line: #c9d5e0;
+      --accent: #0f6e6a;
+      --accent-ink: #fff;
+      --card: #ffffffcc;
+      --shadow: 0 10px 30px rgba(20, 32, 43, 0.08);
+      --font: "Segoe UI Variable", "Segoe UI", "Helvetica Neue", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; color: var(--ink); font-family: var(--font);
+      background: radial-gradient(900px 500px at 10% -10%, #d7ebe8 0%, transparent 55%),
+        linear-gradient(160deg, var(--bg0), var(--bg1)); }
+    .shell { max-width: 720px; margin: 0 auto; min-height: 100dvh; display: flex; flex-direction: column; }
+    .rail { position: sticky; top: 0; z-index: 10; padding: 0.85rem 0.75rem 0.55rem;
+      background: rgba(247,249,251,0.94); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+    .brand { display: flex; gap: 0.65rem; align-items: center; margin-bottom: 0.65rem; }
+    .brand-mark { width: 2rem; height: 2rem; border-radius: 10px; display: grid; place-items: center;
+      background: var(--accent); color: #fff; font-weight: 700; }
+    .brand-name { font-weight: 700; }
+    .badge { font-size: 0.72rem; color: var(--accent); font-weight: 650; background: #e2eef0;
+      padding: 0.2rem 0.5rem; border-radius: 999px; margin-left: auto; }
+    .nav { display: flex; gap: 0.35rem; overflow-x: auto; scrollbar-width: none; }
+    .nav::-webkit-scrollbar { display: none; }
+    .nav button { flex: 0 0 auto; border: 1px solid var(--line); background: #fff; border-radius: 999px;
+      padding: 0.45rem 0.75rem; font: inherit; font-size: 0.82rem; font-weight: 650; cursor: pointer; }
+    .nav button.active { background: var(--accent); color: #fff; border-color: transparent; }
+    .main { padding: 0.85rem 0.85rem 1.5rem; flex: 1; }
+    .banner { background: #e7f3f2; border: 1px solid #b9d9d6; border-radius: 10px; padding: 0.6rem 0.75rem;
+      font-size: 0.8rem; line-height: 1.4; margin-bottom: 0.85rem; }
+    h1 { margin: 0 0 0.3rem; font-size: 1.25rem; }
+    .blurb { margin: 0 0 0.85rem; color: var(--muted); font-size: 0.88rem; line-height: 1.45; }
+    .panel { display: none; }
+    .panel.show { display: block; }
+    .transcript { background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+      min-height: 42vh; padding: 1rem; box-shadow: var(--shadow); }
+    .msg { margin: 0 0 0.85rem; white-space: pre-wrap; line-height: 1.45; font-size: 0.92rem; }
+    .who { font-size: 0.7rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+    .you .who { color: var(--accent); }
+    .composer { display: grid; grid-template-columns: 1fr auto; gap: 0.5rem; margin-top: 0.75rem; }
+    textarea { border: 1px solid var(--line); border-radius: 12px; padding: 0.7rem; font: inherit; font-size: 16px; min-height: 2.8rem; resize: vertical; }
+    .btn { border: 0; background: var(--accent); color: #fff; border-radius: 11px; padding: 0.55rem 0.9rem;
+      font: inherit; font-weight: 650; cursor: pointer; }
+    .chips { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.55rem; }
+    .chip { border: 1px solid var(--line); background: #fff; border-radius: 999px; padding: 0.35rem 0.65rem;
+      font-size: 0.78rem; cursor: pointer; }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 0.85rem 1rem;
+      margin-bottom: 0.65rem; box-shadow: var(--shadow); }
+    .card h3 { margin: 0 0 0.25rem; font-size: 0.98rem; }
+    .card p { margin: 0; color: var(--muted); font-size: 0.86rem; line-height: 1.4; }
+    .grid { display: grid; gap: 0.55rem; }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="rail">
+      <div class="brand">
+        <span class="brand-mark">J</span>
+        <div class="brand-name">Jarvis</div>
+        <span class="badge">Phone preview · desktop UI</span>
+      </div>
+      <nav class="nav" id="nav">
+        <button type="button" class="active" data-panel="chat">Chat</button>
+        <button type="button" data-panel="permissions">Permissions</button>
+        <button type="button" data-panel="connections">Connections</button>
+        <button type="button" data-panel="skills">Skills</button>
+        <button type="button" data-panel="personality">Personality</button>
+        <button type="button" data-panel="experimental">Experimental</button>
+        <button type="button" data-panel="guides">Guides</button>
+      </nav>
+    </header>
+    <main class="main">
+      <p class="banner">This is a <strong>mobile preview</strong> of the desktop companion you’d open on a PC at <code>/app/</code>. Demo replies are local — connect a real brain later for live chat.</p>
+      <h1 id="title">Chat</h1>
+      <p class="blurb" id="blurb">Talk to Jarvis. Technical actions stay behind clear labels and confirmation.</p>
+
+      <section id="panel-chat" class="panel show">
+        <div class="transcript" id="transcript"></div>
+        <form class="composer" id="form">
+          <textarea id="input" rows="2" placeholder="Message Jarvis…"></textarea>
+          <button class="btn" type="submit">Send</button>
+        </form>
+        <div class="chips">
+          <button type="button" class="chip" data-q="/ping">Status</button>
+          <button type="button" class="chip" data-q="/fusion print">ASME print</button>
+          <button type="button" class="chip" data-q="/experimental">Experimental</button>
+          <button type="button" class="chip" data-q="tolerance set to 4.5">Tolerance 4.5</button>
+        </div>
+      </section>
+
+      <section id="panel-permissions" class="panel">
+        <article class="card"><h3>Screen viewing</h3><p>Off by default. Allow a short timer when you need Jarvis to describe the display.</p></article>
+        <article class="card"><h3>Mouse &amp; keyboard</h3><p>Only inside taught recipes — no freestyle PC control.</p></article>
+        <article class="card"><h3>Folder access</h3><p>Grant a path + TTL (e.g. case files). Organize always shows a plan first.</p></article>
+      </section>
+
+      <section id="panel-connections" class="panel">
+        <article class="card"><h3>Fusion 360</h3><p>Detect install → confirm → copy Jarvis add-in.</p></article>
+        <article class="card"><h3>Email clients</h3><p>Outlook / Thunderbird / Gmail → OAuth wizard after you confirm.</p></article>
+        <article class="card"><h3>Tailscale</h3><p>Show mesh IP for brain ↔ CAD PC.</p></article>
+      </section>
+
+      <section id="panel-skills" class="panel">
+        <div class="grid">
+          <article class="card"><h3>Email triage</h3><p>Important mail only → short summaries.</p></article>
+          <article class="card"><h3>Fusion CAD</h3><p>Parametric edits, ASME prints, generators.</p></article>
+          <article class="card"><h3>Markets</h3><p>Graham brief + screenshot portfolio.</p></article>
+          <article class="card"><h3>Adaptive home</h3><p>Propose automations for approval.</p></article>
+        </div>
+      </section>
+
+      <section id="panel-personality" class="panel">
+        <article class="card"><h3>JARVIS + TARS dials</h3><p>Try “humor set to 3” — wit stays light. Profiles: work / home / travel.</p></article>
+      </section>
+
+      <section id="panel-experimental" class="panel">
+        <div class="grid">
+          <article class="card"><h3>Contract redline</h3><p>Compare two PDFs — draft deltas only.</p></article>
+          <article class="card"><h3>Data-room packager</h3><p>Zip diligence folder + checksums.</p></article>
+          <article class="card"><h3>Board-deck outline</h3><p>Exec scaffold from notes + research.</p></article>
+        </div>
+      </section>
+
+      <section id="panel-guides" class="panel">
+        <article class="card"><h3>Docs</h3><p>INDEX · SETUP · FUSION360 · EXPERIMENTAL · CONNECTIONS — same tree as the desktop Guides tab.</p></article>
+      </section>
+    </main>
+  </div>
+  <script>
+    const meta = {
+      chat: ["Chat", "Talk to Jarvis. Technical actions stay behind clear labels and confirmation."],
+      permissions: ["Permissions", "Nothing sensitive runs until you allow it."],
+      connections: ["Connections", "Auto-detect apps, then confirm each link."],
+      skills: ["Skills", "One-tap shortcuts with plain-English explanations."],
+      personality: ["Personality", "Iron Man JARVIS base + TARS-style dials."],
+      experimental: ["Experimental", "Niche corporate tools — drafts only."],
+      guides: ["Guides", "Full documentation tree in one place."],
+    };
+    const replies = {
+      "/ping": "Online (preview mode). On a real PC this hits the Jarvis brain health check.",
+      "/fusion print": "ASME print builder: title block, orthographic views, tolerance dial, then pause for surface-finish callouts you add manually.",
+      "/experimental": "Experimental catalog: data-room, redline, RFP, ServiceNow, SOC2 sorter, and more — not in main Skills.",
+      "tolerance set to 4.5": "Tolerance dial 4.5 → general shop tol. High-tolerance features stay manually confirmed.",
+    };
+    const $ = (s) => document.querySelector(s);
+    const transcript = $("#transcript");
+    function add(who, text) {
+      const el = document.createElement("div");
+      el.className = "msg " + (who === "You" ? "you" : "bot");
+      el.innerHTML = '<div class="who">' + who + "</div>";
+      const body = document.createElement("div");
+      body.textContent = text;
+      el.appendChild(body);
+      transcript.appendChild(el);
+      transcript.scrollTop = transcript.scrollHeight;
+    }
+    function show(id) {
+      document.querySelectorAll(".panel").forEach((p) => p.classList.toggle("show", p.id === "panel-" + id));
+      document.querySelectorAll(".nav button").forEach((b) => b.classList.toggle("active", b.dataset.panel === id));
+      $("#title").textContent = meta[id][0];
+      $("#blurb").textContent = meta[id][1];
+    }
+    document.querySelectorAll(".nav button").forEach((b) => b.addEventListener("click", () => show(b.dataset.panel)));
+    function send(text) {
+      const t = (text || "").trim();
+      if (!t) return;
+      add("You", t);
+      const key = t.toLowerCase();
+      const hit = Object.keys(replies).find((k) => key === k || key.includes(k.replace(/^\//, "")));
+      add("Jarvis", replies[hit] || "Preview demo: on desktop with the brain running, this would route to /chat. Open Skills or Experimental to browse the real layout.");
+    }
+    $("#form").addEventListener("submit", (e) => { e.preventDefault(); const v = $("#input").value; $("#input").value = ""; send(v); });
+    document.querySelectorAll("[data-q]").forEach((c) => c.addEventListener("click", () => { show("chat"); send(c.getAttribute("data-q")); }));
+    add("Jarvis", "Mobile preview of the desktop companion. Swipe the tabs — Chat, Connections, Skills, Experimental — to see how it lays out on a phone.");
+  </script>
+</body>
+</html>
